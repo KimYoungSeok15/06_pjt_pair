@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Movie
+from .models import Movie, Comment
 from .forms import MovieForm, CommentForm
 
 
@@ -65,11 +65,35 @@ def update(request, pk):
 
 
 def comments_create(request, pk):
-    pass
+    if request.user.is_authenticated:
+        movie = Movie.objects.get(pk=pk)
+        comment_form = CommentForm(request.POST)
+        parent_pk = request.POST.get('parent_pk')
+        if comment_form.is_valid():
+            comment = comment_form.save(commit=False) # comment_form는 article과 user행 정보는 안받은 상태(exclude 되어있음)
+            comment.movie = movie # 비어있는 칼럼에 정보 추가
+            comment.user = request.user
+            if parent_pk:
+                parent = Movie.objects.get(pk=parent_pk)
+                comment.parent = parent
+            comment.save()
+        return redirect('movies:detail', movie.pk)
+    return redirect('accounts:login')
 
 def comments_delete(request, pk, comment_pk):
-    pass
+    if request.user.is_authenticated:
+        comment = Comment.objects.get(pk=comment_pk)
+        if request.user == comment.user:
+            comment.delete()
+    return redirect('articles:detail', pk)
 
-def likes(request, article_pk):
-    pass
+def likes(request, movie_pk):
+    if request.user.is_authenticated:
+        movie = Movie.objects.get(pk=movie_pk)
+        if movie.like_users.filter(pk=request.user.pk).exists():
+            movie.like_users.remove(request.user)
+        else:
+            movie.like_users.add(request.user)
+        return redirect('movies:detail', movie_pk)
+    return redirect('accounts:login')
 
