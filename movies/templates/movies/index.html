@@ -18,7 +18,7 @@
   {% for movie in movies %}
     {% if movie.thumbnail_img %}
       <img src="{{ movie.thumbnail_img.url }}" alt="{{ movie.thumbnail_img }}">
-      {% endif %}
+    {% endif %}
     <a class="" href="{% url 'movies:detail' movie.pk %}">{{ movie.title }}</a>
     <br>
     작성자: <a class="" href="{% url 'accounts:profile' movie.user.username %}"> {{movie.user}}</a>
