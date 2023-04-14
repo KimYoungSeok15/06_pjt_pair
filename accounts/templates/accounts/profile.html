@@ -21,7 +21,7 @@
 </div>
 {% endif %}
 {% endif %}
-<hr>
+<hr><br>
 
 <h2> {{ person.username }}님의 게시글 </h2>
 {% for movie in person.movie_set.all %}
@@ -34,7 +34,7 @@
 </div>
 <div>{{ movies.title }} </div>
 {% endfor %}
-<hr><br><br>
+<br><hr><br>
 
 <h2> {{ person.username }}님이 좋아요 한 게시글 </h2>
 {% for movie in person.like_movie.all %}
@@ -47,10 +47,8 @@
 </div>
 <div>{{ movie.title }} </div>
 {% endfor %}
-<hr><br><br>
-<a href="{% url 'movies:index' %}" class="btn btn-success"></a>
-
-<a href="{% url 'movies:index' %}">back</a>
+<hr>
+<a href="{% url 'movies:index' %}" class="btn btn-success">돌아가기</a>
 
 {% endblock content %}
 
