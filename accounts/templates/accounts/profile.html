@@ -37,7 +37,7 @@
 <br><hr><br>
 
 <h2> {{ person.username }}님이 좋아요 한 게시글 </h2>
-{% for movie in person.like_movie.all %}
+{% for movie in person.like_movies.all %}
 <div class="card">
   <div class="card-body">
     <h5 class="card-title">{{ movie.title }}</h5>

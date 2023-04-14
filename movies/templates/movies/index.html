@@ -7,5 +7,15 @@
   {% for movie in movies %}
     <a href="{% url 'movies:detail' movie.pk %}"><p>{{ movie.title }}</p></a>
     <hr>
+    {% if request.user.is_authenticated %}
+    <form action="{% url 'movies:likes' movie.pk %}" method="POST">
+      {% csrf_token %}
+      {% if request.user in movie.like_users.all %}
+        <input type="submit" value="좋아요 취소">
+      {% else %}
+        <input type="submit" value="좋아요">
+      {% endif %}
+    </form>
+  {% endif %}
   {% endfor %}
 {% endblock %}
