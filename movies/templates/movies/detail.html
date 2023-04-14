@@ -7,6 +7,40 @@
     <h5>{{ movie.title }}</h5>
     <p>{{ movie.description }}</p>
   </div>
+  <hr>
+
+  {% if request.user == movie.user %}
+      <a href="{% url 'movies:update' movie.pk %}">UPDATE</a>
+      <form action="{% url 'movies:delete' movie.pk %}" id="delete-form">
+        {% csrf_token %}
+        <input type="submit" value="DELETE" id="delete-btn" />
+      </form><br>
+      <hr>
+  {% endif %}
+  
   <a href="{% url 'movies:index' %}">BACK</a>
   <hr>
+  <h5>댓글 목록</h5>
+  <ul>  
+    {% for comment in comments %}     
+      <li>
+        {{comment.user}} : {{comment.content}} 
+        {% if request.user == comment.user %}
+        <form action="{% url 'moviess:comments_delete' movie.pk comment.pk%}" method="POST">
+          {% csrf_token %}
+          <input type="submit" value="삭제">
+        </form>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+  {% if request.user.is_authenticated %}
+    <form action="{% url 'movies:comments_create' movie.pk %}" method="POST">
+      {% csrf_token %}
+      {{comment_form}}
+      <input type="submit" value="저장">
+    </form>
+    {% else %}
+      <a href="{% url 'accounts:login' %}">[댓글을 작성하려면 로그인하세요.]</a>
+  {% endif %}
 {% endblock  %}
