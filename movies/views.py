@@ -53,3 +53,15 @@ def update(request, pk):
         'form': form,
     }
     return render(request, 'movies/update.html', context)
+
+
+
+def comments_create(request, pk):
+    pass
+
+def comments_delete(request, pk, comment_pk):
+    pass
+
+def likes(request, article_pk):
+    pass
+
