@@ -11,6 +11,7 @@ from .forms import CustomUserCreationForm, CustomUserChangeForm
 
 
 # Create your views here.
+@require_http_methods(['POST','GET'])
 def login(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, request.POST)
@@ -23,10 +24,12 @@ def login(request):
     context = {'form': form}
     return render(request, 'accounts/login.html', context)
 
+@require_http_methods(['POST'])
 def logout(request):
     auth_logout(request)
     return redirect('movies:index')
 
+@require_http_methods(['POST','GET'])
 def signup(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
@@ -45,6 +48,7 @@ def delete(request):
     auth_logout(request)
     return redirect('movies:index')
 
+@require_http_methods(['POST','GET'])
 def update(request):
     if request.method == 'POST':
         form = CustomUserChangeForm(request.POST, instance=request.user)
@@ -56,7 +60,7 @@ def update(request):
     context = {'form': form}
     return render(request, 'accounts/update.html', context)
 
-
+@require_http_methods(['POST','GET'])
 def change_password(request):
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
@@ -69,7 +73,7 @@ def change_password(request):
     context = {'form': form}
     return render(request, 'accounts/change_password.html', context)
 
-
+@require_http_methods(['GET'])
 def profile(request, username):
     User = get_user_model()
     person = User.objects.get(username=username)

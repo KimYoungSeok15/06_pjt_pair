@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% comment %} <hr />
+{% if hashtag_list %}
+  {% for tag in hashtag_list %}
+  <a href="{% url 'articles:hashtag_filter' tag.pk %}"><span class="mx-4">{{ tag.content }}</span></a>
+  {% endfor %}
+{% endif %}
+<hr> {% endcomment %}
+<h1>{{ hashtag.content }}</h1>
+<hr>
+{% for movie in movies %}
+<p>
+  {% if movie.thumbnail_img %}
+  <img src="{{ movie.thumbnail_img.url }}" alt="{{ movie.thumbnail_img }}">
+  {% endif %}
+  <a href="{% url 'movies:detail' movie.pk %}" id="movie-title">
+    {{movie.title}}
+  </a>
+  - 작성자: {{movie.user}}
+</p>
+<span>좋아요 : {{movie.like_users.count}}</span>
+{% if request.user.is_authenticated %}
+<form action="{% url 'movies:likes' movie.pk %}" method="POST">
+  {% csrf_token %}
+  {% if requset.user in movie.like_users.all %}
+    <input type="submit" value="좋아요 취소">
+    <input type="submit" value="좋아요">
+  {% endif %}
+</form>
+{% endif %}
+<hr />
+{% endfor %} 
+
+<br>
+<a href="{% url 'movies:index' %}">BACK</a>
+{% endblock content %}
+
+

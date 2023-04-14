@@ -3,8 +3,13 @@
 {% block content %}
   <h1>DETAIL</h1>
   <hr>
+  {% if movie.image %}
+    <img src="{{movie.image.url}}" />
+  {% endif %}
   <div>
     <h5>{{ movie.title }}</h5>
+    <span>좋아요 : {{movie.like_users.count}}</span>
+    <hr>    
     <p>{{ movie.description }}</p>
   </div>
   <hr>
@@ -14,24 +19,37 @@
       <form action="{% url 'movies:delete' movie.pk %}" id="delete-form">
         {% csrf_token %}
         <input type="submit" value="DELETE" id="delete-btn" />
-      </form><br>
-      <hr>
+      </form>
   {% endif %}
-  
   <a href="{% url 'movies:index' %}">BACK</a>
   <hr>
   <h5>댓글 목록</h5>
+  {% if comments %}
+      <p><b>{{comments|length}}개의 댓글</b></p>
+  {% endif %}
   <ul>  
     {% for comment in comments %}     
       <li>
         {{comment.user}} : {{comment.content}} 
         {% if request.user == comment.user %}
-        <form action="{% url 'moviess:comments_delete' movie.pk comment.pk%}" method="POST">
+        <form action="{% url 'movies:comments_delete' movie.pk comment.pk %}" method="POST">
           {% csrf_token %}
           <input type="submit" value="삭제">
         </form>
         {% endif %}
       </li>
+      <p>대댓글</p>
+        {% for reply in comment.replies.all %}
+        <p>{{ reply.content }}</p>
+        {% endfor %}
+        <form action="{% url 'movies:comments_create' movie.pk %}" method="POST">
+          <input type="hidden" name="parent_pk" value="{{ comment.pk }}">
+          {% csrf_token %}
+          {{ comment_form }}
+          <input type="submit" value="대댓글">
+        </form>
+      {% empty %}
+        <li>댓글이 없습니다 :(</li>
     {% endfor %}
   </ul>
   {% if request.user.is_authenticated %}
