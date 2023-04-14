@@ -12,88 +12,80 @@ from .forms import CustomUserCreationForm, CustomUserChangeForm
 
 # Create your views here.
 def login(request):
-    pass
-    # if request.method == 'POST':
-    #     form = AuthenticationForm(request, request.POST)
-    #     if form.is_valid():
-    #         auth_login(request, form.get_user())
-    #         return redirect('articles:index')
-    # else:
-    #     form = AuthenticationForm()
+    if request.method == 'POST':
+        form = AuthenticationForm(request, request.POST)
+        if form.is_valid():
+            auth_login(request, form.get_user())
+            return redirect('movies:index')
+    else:
+        form = AuthenticationForm()
 
-    # context = {'form': form}
-    # return render(request, 'accounts/login.html', context)
+    context = {'form': form}
+    return render(request, 'accounts/login.html', context)
 
 def logout(request):
-    pass
-    # auth_logout(request)
-    # return redirect('articles:index')
+    auth_logout(request)
+    return redirect('movies:index')
 
 def signup(request):
-    pass
-    # if request.method == 'POST':
-    #     form = CustomUserCreationForm(request.POST)
-    #     if form.is_valid():
-    #         user = form.save()
-    #         auth_login(request, user)
-    #         return redirect('articles:index') 
-    # else:
-    #     form = CustomUserCreationForm()
-    # context = {'form': form}
-    # return render(request, 'accounts/signup.html', context)
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            auth_login(request, user)
+            return redirect('movies:index') 
+    else:
+        form = CustomUserCreationForm()
+    context = {'form': form}
+    return render(request, 'accounts/signup.html', context)
 
 @require_http_methods(['POST'])
 def delete(request):
-    pass
-#     request.user.delete()
-#     auth_logout(request)
-#     return redirect('articles:index')
+    request.user.delete()
+    auth_logout(request)
+    return redirect('movies:index')
 
 def update(request):
-    pass
-    # if request.method == 'POST':
-    #     form = CustomUserChangeForm(request.POST, instance=request.user)
-    #     if form.is_valid():
-    #         form.save()
-    #         return redirect('articles:index') 
-    # else:
-    #     form = CustomUserChangeForm(instance=request.user)
-    # context = {'form': form}
-    # return render(request, 'accounts/update.html', context)
+    if request.method == 'POST':
+        form = CustomUserChangeForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('movies:index') 
+    else:
+        form = CustomUserChangeForm(instance=request.user)
+    context = {'form': form}
+    return render(request, 'accounts/update.html', context)
 
 
 def change_password(request):
-    pass
-    # if request.method == 'POST':
-    #     form = PasswordChangeForm(request.user, request.POST)
-    #     if form.is_valid():
-    #         form.save()
-    #         update_session_auth_hash(request, form.user)
-    #         return redirect('articles:index') 
-    # else:
-    #     form = PasswordChangeForm(request.user)
-    # context = {'form': form}
-    # return render(request, 'accounts/change_password.html', context)
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)
+            return redirect('movies:index') 
+    else:
+        form = PasswordChangeForm(request.user)
+    context = {'form': form}
+    return render(request, 'accounts/change_password.html', context)
 
 
 def profile(request, username):
-    pass
-    # User = get_user_model()
-    # person = User.objects.get(username=username)
-    # context = {
-    #     'person':person,
-    # }
-    # return render(request, 'accounts/profile.html', context)
+    User = get_user_model()
+    person = User.objects.get(username=username)
+    context = {
+        'person':person,
+    }
+    return render(request, 'accounts/profile.html', context)
 
 @require_POST
 def follow(request, user_pk):
-    pass
-    # if request.user.is_authenticated:
-    #     person = get_user_model().objects.get(pk=user_pk)
-    #     if person != request.user:
-    #         if person.followers.filter(pk=request.user.pk).exists():
-    #             person.followers.remove(request.user)
-    #         else:
-    #             person.followers.add(request.user)
-    #     return redirect('accounts:profile', person.username)
-    # return redirect('accounts:login')
+    if request.user.is_authenticated:
+        person = get_user_model().objects.get(pk=user_pk)
+        if person != request.user:
+            if person.followers.filter(pk=request.user.pk).exists():
+                person.followers.remove(request.user)
+            else:
+                person.followers.add(request.user)
+        return redirect('accounts:profile', person.username)
+    return redirect('accounts:login')
