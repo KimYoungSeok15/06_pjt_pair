@@ -15,7 +15,9 @@ def create(request):
     if request.method == 'POST':
         form = MovieForm(request.POST)
         if form.is_valid():
-            movie = form.save()
+            movie = form.save(commit=False)
+            movie.user = request.user
+            movie.save()
             return redirect('movies:detail', movie.pk)
     else:
         form = MovieForm()
