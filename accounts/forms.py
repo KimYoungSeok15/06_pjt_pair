@@ -10,6 +10,4 @@ class CustomUserChangeForm(UserChangeForm):
 
     class Meta(UserChangeForm.Meta):
         model = get_user_model()
-        fields = ('username', 'first_name', 'last_name', 'email',
-                   'is_staff', 'is_active', 'date_joined', 'password',
-                   'last_login', 'is_superuser')
+        fields = ('username',)
